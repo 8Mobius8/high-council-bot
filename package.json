@@ -1,0 +1,26 @@
+{
+  "name": "high-council-bot",
+  "version": "0.0.1",
+  "description": "Some discord friends said I needed to automate role assignment. So did.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/8Mobius8/high-council-bot.git"
+  },
+  "keywords": [
+    "discord"
+  ],
+  "author": "8moibus8",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/8Mobius8/high-council-bot/issues"
+  },
+  "homepage": "https://github.com/8Mobius8/high-council-bot#readme",
+  "dependencies": {
+    "discord.js": "^12.3.1",
+    "eslint": "^7.9.0"
+  }
+}
