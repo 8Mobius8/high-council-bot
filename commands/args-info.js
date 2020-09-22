@@ -1,17 +1,13 @@
 module.exports = {
-    name: 'avatar',
-    description: 'Shows Avatar URLs.',
+    name: 'args-info',
+    description: 'Information about the arguments provided.',
+    args: true,
+    usage: '<user> <role>',
     execute(message, args) {
-        if (!message.mentions.users.size) {
-            return message.channel.send(`Your avatar: <${message.author.displayAvatarURL({ format: "png", dynamic: true })}>`);
+        if(args[0] === 'foo') {
+            return message.channel.send('bar');
         }
-    
-        const avatarList = message.mentions.users.map(user => {
-            return `${user.username}'s avatar: <${user.displayAvatarURL({ format: "png", dynamic: true })}>`;
-        });
-    
-        // send the entire array of strings as a message
-        // by default, discord.js will `.join()` the array with `\n`
-        message.channel.send(avatarList);
+
+        message.channel.send(`Arguments: ${args}\nArguments length: ${args.length}`);
     }
 }
