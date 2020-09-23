@@ -1,4 +1,6 @@
 const { Permissions } = require('discord.js');
+const { adjectives, pass_exclaimations, fail_exclaimations } = require('./phrases.json');
+
 module.exports = {
 	name: 'new-role',
 	description: 'Creates a petition for a new role. This will create a role without any permissions.',
@@ -45,9 +47,11 @@ function sendPetitionMessage(channel, roleName, requestor, users) {
 	const usersLine = users.map(member => {
 		return `<@${member.id}>`;
 	}).join(' ');
+
+	const anAdjective = randomFrom(adjectives);
 	return channel.send(
 		'**New Role Petition**:\n' +
-		`<@${requestor.id}> would like to create a new role ${roleName} for ${usersLine}\n` +
+		`<@${requestor.id}> would like to create a new *${anAdjective}* role ${roleName} for ${usersLine}\n` +
 		'Members may show support however they like.\n' +
 		'A role admin please approve by reacting with a 👍 to approve this petition.\n',
 		{ allowedMentions: { parse: ['users'] } },
@@ -110,9 +114,10 @@ function sendSuccessMessage(channel, roleId, membersWithRole) {
 	const usersLine = membersWithRole.map(member => {
 		return `<@${member[1].id}>`;
 	}).join(' ');
-
+	const anExclaimation = randomFrom(pass_exclaimations);
 	return channel.send(
 		'**Petition APPROVED**\n' +
+		`*${anExclaimation}*\n` +
 		`New role <@&${roleId}> has been create for ${usersLine}`,
 		{ allowedMentions: { parse: ['roles', 'users'] } },
 	);
@@ -123,8 +128,14 @@ function sendErrorMessage(channel, error) {
 }
 
 function sendUnapprovedMessage(channel, roleName) {
+	const anExclaimation = randomFrom(fail_exclaimations);
 	return channel.send(
 		'`**Petition FAILED!**\n' +
+		`*${anExclaimation}*\n` +
 		`${roleName} was not created because the petition did not pass.`,
 		{ allowedMentions: { parse: ['roles', 'users'] } });
+}
+
+function randomFrom(anArray) {
+	return anArray[Math.floor(Math.random() * anArray.length)];
 }

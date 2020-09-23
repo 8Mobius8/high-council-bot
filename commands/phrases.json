@@ -1,0 +1,27 @@
+{
+  "adjectives":[
+    "honorable", 
+    "abhorrent",
+    "abject",
+    "abortive",
+    "aloof",
+    "amatory",
+    "arcadian",
+    "baleful",
+    "barbarous",
+    "boorish",
+    "craven",
+    "gustatory"
+  ],
+  "pass_exclaimations": [
+    "HUUZZZAH!",
+    "Olé!",
+    "Gee Wilkers Batman!"
+  ],
+  "fail_exclaimations":[
+    "RU-Roh Raggy!",
+    "Zoinks!",
+    "Golly",
+    "Shucks"
+  ]
+}
