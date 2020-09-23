@@ -33,8 +33,6 @@ client.on('message', message => {
 
 	if (!command) return;
 
-	console.log('command found');
-
 	if (command.args && !args.length) {
 		let reply = `You didnt' provide any arguments, ${message.author}!`;
 

@@ -1,58 +1,130 @@
 const { Permissions } = require('discord.js');
-
 module.exports = {
 	name: 'new-role',
-	description: 'Creates a petition for a new role',
-	aliases: ['nr', 'grovel-role', 'beg-for-role'],
-	usage: '<role-name> <mentions-to-attach-role-to>',
+	description: 'Creates a petition for a new role. This will create a role without any permissions.',
+	aliases: ['nr', 'grovel-4-role', 'beg-4-role'],
+	usage: '<role-name> <user-mentions>',
 	args: true,
-	execute(message, args) {
-
-		const filter = (reaction, user) => {
-			return !user.bot && reaction.emoji.name === '👍' &&
-        message.guild.members.resolve(user).hasPermission(Permissions.FLAGS.MANAGE_ROLES);
-		};
-
-		const roleName = args.shift();
-		const mentionedMembers = message.mentions.members;
-
-		const collector = message.createReactionCollector(filter, { time: 15000 });
-
-		collector.on('collect', (reaction, user) => {
-			console.log(`Role Admin ${user.tag} responded with ${reaction.emoji.name}. Role Approved`);
-			collector.stop('role admin responded');
-			const roleData = {
-				data: {
-					name: roleName,
-					permissions: 0,
-				},
-				reason: 'Petition for new role was approved.',
-			};
-			let roleId = '';
-
-			message.guild.roles
-				.create(roleData)
-				.then((role) => {
-					console.log(`Create new role named ${role.name}`);
-					roleId = role.id;
-					return Promise.all(mentionedMembers.each(member => member.roles.add(role)));
-				})
-				.then((mArray) => {
-					const usersLine = mArray.map(m => `<@${m[1].id}>`).join(' ');
-					console.log(`Applied role to users ${usersLine}`);
-					message.channel.send(
-						`New role <@&${roleId}> has been create for ${usersLine}`,
-						{ allowedMentions: { parse: ['roles', 'users'] } });
-				})
-				.catch((error) => {
-					console.error(error);
-					message.channel.send(`There was a problem creating a new role: ${error}`);
-				});
-		});
-
-		collector.on('end', () => {
-			console.log(collector.endReason());
-		});
-
-	},
+	execute: newRoleForUsers,
 };
+
+function newRoleForUsers(message, args) {
+	const roleName = args.find(arg => !getUserFromArg(message.client.users.cache, arg));
+	const aGuild = message.guild;
+	const mentionedMembers = message.mentions.members;
+
+	const usageHelp = 'Use `!help nr` to see how to usage.';
+	if (mentionedMembers.size < 1) {
+		return message.channel.send(`<@${message.author.id}>, you didn't mention anyone to add a role to!\n${usageHelp}.`);
+	}
+	else if (!roleName) {
+		return message.channel.send(`<@${message.author.id}>, you didn't provided a role-name!\n${usageHelp}.`);
+	}
+
+	sendPetitionMessage(message.channel, roleName, message.author, mentionedMembers)
+		.then((petitionMsg) => {
+			const roleAdminAppovedFilter = (reaction, user) => {
+				return reaction.emoji.name === '👍'
+					&& aGuild.members.resolve(user).hasPermission(Permissions.FLAGS.MANAGE_ROLES);
+			};
+			const collector = petitionMsg.createReactionCollector(roleAdminAppovedFilter, { time: 15000 });
+
+			collector.on('collect', () => collector.stop('role admin approved'));
+			collector.on('end', (collected, reason) => {
+				if (reason === 'role admin approved') {
+					approvedRoleCreation(aGuild, petitionMsg.channel, roleName, mentionedMembers);
+				}
+				else {
+					sendUnapprovedMessage(petitionMsg.channel, roleName);
+				}
+			});
+		});
+}
+
+function sendPetitionMessage(channel, roleName, requestor, users) {
+	const usersLine = users.map(member => {
+		return `<@${member.id}>`;
+	}).join(' ');
+	return channel.send(
+		'**New Role Petition**:\n' +
+		`<@${requestor.id}> would like to create a new role ${roleName} for ${usersLine}\n` +
+		'Members may show support however they like.\n' +
+		'A role admin please approve by reacting with a 👍 to approve this petition.\n',
+		{ allowedMentions: { parse: ['users'] } },
+	);
+}
+
+function approvedRoleCreation(aGuild, channel, roleName, users) {
+	let roleId = '';
+	createNewRole(aGuild, roleName)
+		.then((role) => {
+			console.log(`Created new role named ${role.name}`);
+			roleId = role.id;
+			return applyRole(role, users);
+		})
+		.then((mArray) => {
+			console.log(`Applied new role to users ${mArray}`);
+			sendSuccessMessage(channel, roleId, mArray);
+		})
+		.catch((error) => {
+			console.error(error);
+			sendErrorMessage(error);
+		})
+		.finally(() => {
+			console.log('Finished adding roles and appling to user.');
+		});
+}
+
+function getUserFromArg(users, arg) {
+	if (!arg) return;
+
+	if (arg.startsWith('<@') && arg.endsWith('>')) {
+		arg = arg.slice(2, -1);
+
+		if (arg.startsWith('!')) {
+			arg = arg.slice(1);
+		}
+
+		return users.get(arg);
+	}
+}
+
+function createNewRole(aGuild, name) {
+	return aGuild.roles
+		.create({
+			data: {
+				name: name,
+				permissions: 0,
+			},
+			reason: 'Petition for new role was approved.',
+		});
+}
+
+function applyRole(role, members) {
+	return Promise.all(
+		members.each(member => member.roles.add(role.id)),
+	);
+}
+
+function sendSuccessMessage(channel, roleId, membersWithRole) {
+	const usersLine = membersWithRole.map(member => {
+		return `<@${member[1].id}>`;
+	}).join(' ');
+
+	return channel.send(
+		'**Petition APPROVED**\n' +
+		`New role <@&${roleId}> has been create for ${usersLine}`,
+		{ allowedMentions: { parse: ['roles', 'users'] } },
+	);
+}
+
+function sendErrorMessage(channel, error) {
+	return channel.send(`There was a problem creating a new role: ${error}`);
+}
+
+function sendUnapprovedMessage(channel, roleName) {
+	return channel.send(
+		'`**Petition FAILED!**\n' +
+		`${roleName} was not created because the petition did not pass.`,
+		{ allowedMentions: { parse: ['roles', 'users'] } });
+}
