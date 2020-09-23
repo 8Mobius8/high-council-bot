@@ -1,42 +1,58 @@
-const { MessageAttachment, ReactionCollector, Permissions } = require('discord.js');
+const { Permissions } = require('discord.js');
 
 module.exports = {
-    name: 'new-role',
-    description: 'Creates a petition for a new role',
-    aliases: ['nr', 'grovel-role', 'beg-for-role', 'request'],
-    usage: `<role-name> <mentions-to-attach-role-to>`,
-    args: true,
-    execute(message, args) {
+	name: 'new-role',
+	description: 'Creates a petition for a new role',
+	aliases: ['nr', 'grovel-role', 'beg-for-role'],
+	usage: '<role-name> <mentions-to-attach-role-to>',
+	args: true,
+	execute(message, args) {
 
-        const filter = (reaction, user) => {
-            return !user.bot && reaction.emoji.name === '👍' &&
-                message.guild.members.resolve(user).hasPermission(Permissions.FLAGS.MANAGE_ROLES)
-        };
+		const filter = (reaction, user) => {
+			return !user.bot && reaction.emoji.name === '👍' &&
+        message.guild.members.resolve(user).hasPermission(Permissions.FLAGS.MANAGE_ROLES);
+		};
 
-        const roleName = args.shift();
-        const usersNames = args;
+		const roleName = args.shift();
+		const mentionedMembers = message.mentions.members;
 
-        const collector = message.createReactionCollector(filter, { time: 15000 });
+		const collector = message.createReactionCollector(filter, { time: 15000 });
 
-        collector.on('collect', (reaction, user) => {
-            console.log(`Found ${reaction.emoji.name} from role manager ${user.tag}`);
-            collector.stop('admin responded')
-            try {
-                message.guild.roles.create({
-                    data: {
-                        name: roleName
-                    },
-                    reason: 'Petition for new election as approved.',
-                })
-                message.channel.send(`New role ${roleName} has been created for ${usersNames}`);
-            } catch (error) {
-                message.channel.send(`new-role command had an error while forfilling\n${error}`)
-            }
-        });
+		collector.on('collect', (reaction, user) => {
+			console.log(`Role Admin ${user.tag} responded with ${reaction.emoji.name}. Role Approved`);
+			collector.stop('role admin responded');
+			const roleData = {
+				data: {
+					name: roleName,
+					permissions: 0,
+				},
+				reason: 'Petition for new role was approved.',
+			};
+			let roleId = '';
 
-        collector.on('end', collected => {
-            console.log(collector.endReason());
-        });
+			message.guild.roles
+				.create(roleData)
+				.then((role) => {
+					console.log(`Create new role named ${role.name}`);
+					roleId = role.id;
+					return Promise.all(mentionedMembers.each(member => member.roles.add(role)));
+				})
+				.then((mArray) => {
+					const usersLine = mArray.map(m => `<@${m[1].id}>`).join(' ');
+					console.log(`Applied role to users ${usersLine}`);
+					message.channel.send(
+						`New role <@&${roleId}> has been create for ${usersLine}`,
+						{ allowedMentions: { parse: ['roles', 'users'] } });
+				})
+				.catch((error) => {
+					console.error(error);
+					message.channel.send(`There was a problem creating a new role: ${error}`);
+				});
+		});
 
-    }
-}
+		collector.on('end', () => {
+			console.log(collector.endReason());
+		});
+
+	},
+};
