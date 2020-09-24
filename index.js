@@ -70,4 +70,12 @@ client.on('message', message => {
 	}
 });
 
-client.login(token);
+client.login(token)
+	.catch((error) => {
+		if (error.code === 'TOKEN_INVALID') {
+			console.error('Discord token is not acceptable. Please set config.json or DISCORD_TOKEN appropiately.');
+		}
+		else {
+			throw error;
+		}
+	});
