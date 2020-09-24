@@ -1,5 +1,7 @@
 const { Permissions } = require('discord.js');
 const { adjectives, pass_exclaimations, fail_exclaimations } = require('./phrases.json');
+// Time to wait for a peition
+const { waitTime } = require('../config.js');
 
 module.exports = {
   name: 'new-role',
@@ -29,7 +31,9 @@ function newRoleForUsers(message, args) {
         return reaction.emoji.name === '👍'
           && aGuild.members.resolve(user).hasPermission(Permissions.FLAGS.MANAGE_ROLES);
       };
-      const collector = petitionMsg.createReactionCollector(roleAdminAppovedFilter, { time: 15000 });
+
+      const collector = petitionMsg.createReactionCollector(roleAdminAppovedFilter,
+        { time: waitTime });
 
       collector.on('collect', () => collector.stop('role admin approved'));
       collector.on('end', (collected, reason) => {

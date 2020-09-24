@@ -1,9 +1,10 @@
-let prefix, token;
+let prefix, token, waitTime;
 
 try {
   const config = require('./config.json');
   prefix = config.prefix;
   token = config.token;
+  waitTime = config['wait-time'];
 }
 catch (error) {
   if (error.code !== 'MODULE_NOT_FOUND') {
@@ -14,4 +15,5 @@ catch (error) {
 module.exports = {
   prefix: prefix || process.env.BOT_PREFIX || '!',
   token: token || process.env.DISCORD_TOKEN,
+  waitTime: waitTime || process.env.WAIT_TIME || 90000, // 1.5 mins
 };
