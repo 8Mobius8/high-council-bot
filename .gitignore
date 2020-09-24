@@ -1,2 +1,7 @@
 config.json
 node_modules
+k8s/overlays/*/secrets/*
+/node_modules
+npm-debug.log
+.DS_Store
+/*.env
