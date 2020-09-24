@@ -1,6 +1,6 @@
 {
-  "adjectives":[
-    "honorable", 
+  "adjectives": [
+    "honorable",
     "abhorrent",
     "abject",
     "abortive",
@@ -18,10 +18,17 @@
     "Olé!",
     "Gee Wilkers Batman!"
   ],
-  "fail_exclaimations":[
+  "fail_exclaimations": [
     "RU-Roh Raggy!",
     "Zoinks!",
     "Golly",
     "Shucks"
+  ],
+  "salutations": [
+    "hello",
+    "hai",
+    "Salutations!",
+    "Greetings Earthling!",
+    "Come and stay awhile!"
   ]
 }

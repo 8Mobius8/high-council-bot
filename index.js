@@ -1,6 +1,8 @@
+const http = require('http');
 const fs = require('fs');
 const Discord = require('discord.js');
 const { prefix, token } = require('./config.js');
+const { salutations } = require('./commands/phrases.json');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
@@ -75,7 +77,19 @@ client.login(token)
 		if (error.code === 'TOKEN_INVALID') {
 			console.error('Discord token is not acceptable. Please set config.json or DISCORD_TOKEN appropiately.');
 		}
-		else {
+		else	{
 			throw error;
 		}
 	});
+
+function randomFrom(anArray) {
+	return anArray[Math.floor(Math.random() * anArray.length)];
+}
+
+http.createServer(
+	function(request, response) {
+		const content = randomFrom(salutations);
+		response.writeHead(200);
+		response.end(content, 'utf-8');
+	},
+).listen(process.env.PORT || 443);
