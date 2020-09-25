@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: high-council-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: high-council-bot
+  template:
+    metadata:
+      labels:
+        app: high-council-bot
+    spec:
+      containers:
+        - name: high-council-bot
+          image: 8mobius8/high-council-bot
+          ports: []
+          resources:
+            requests:
+              cpu: 20m
+              memory: 100Mi
+            limits:
+              cpu: 20m
+              memory: 100Mi
+          command: ["npm", "run", "prod"]
+          env:
+            - name: "BOT_CONFIG_PATH"
+              value: "/home/node/app/config/config.json"
+          volumeMounts:
+            - name: bot-config-volume
+              mountPath: /home/node/app/config
+      volumes:
+        - name: bot-config-volume
+          configMap:
+            name: bot-config

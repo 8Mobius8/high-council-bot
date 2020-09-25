@@ -1,7 +1,7 @@
 let prefix, token, waitTime;
 
 try {
-  const config = require('./config.json');
+  const config = require(process.env.BOT_CONFIG_PATH || './config.json');
   prefix = config.prefix;
   token = config.token;
   waitTime = config['wait-time'];

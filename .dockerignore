@@ -1,2 +1,7 @@
 Dockefile
 config.json
+k8s
+node_modules
+.git
+dist
+build

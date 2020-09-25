@@ -1,0 +1,19 @@
+apiVersion: skaffold/v2beta5
+kind: Config
+portForward: []
+build:
+  artifacts:
+    - image: 8mobius8/high-council-bot
+profiles:
+  - name: production
+    deploy:
+      kustomize:
+        paths:
+          - k8s/overlays/production
+    build:
+      artifacts:
+        - image: 8mobius8/high-council-bot
+          sync: {}
+          docker:
+            buildArgs:
+              ENV: production
