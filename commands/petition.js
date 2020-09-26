@@ -13,7 +13,7 @@ module.exports = {
   execute: newRoleForUsers
 }
 
-function newRoleForUsers (message, args) {
+function newRoleForUsers(message, args) {
   const roleName = args.find(arg => !getUserFromArg(message.client.users.cache, arg))
   const aGuild = message.guild
   const mentionedMembers = message.mentions.members
@@ -28,14 +28,19 @@ function newRoleForUsers (message, args) {
   sendPetitionMessage(message.channel, roleName, message.author, mentionedMembers)
     .then((petitionMsg) => {
       const roleAdminAppovedFilter = (reaction, user) => {
-        return reaction.emoji.name === '👍' &&
-          aGuild.members.resolve(user).hasPermission(Permissions.FLAGS.MANAGE_ROLES)
+        return aGuild.members.resolve(user).hasPermission(Permissions.FLAGS.MANAGE_ROLES)
       }
 
       const collector = petitionMsg.createReactionCollector(roleAdminAppovedFilter,
         { time: waitTime })
 
-      collector.on('collect', () => collector.stop('role admin approved'))
+      collector.on('collect', (reaction, user) => {
+        if (reaction.emoji.name === '👍') {
+          collector.stop('role admin approved')
+        } else if (reaction.emoji.name === '👎') {
+          collector.stop('role admin disapproved')
+        }
+      })
       collector.on('end', (collected, reason) => {
         if (reason === 'role admin approved') {
           approvedRoleCreation(aGuild, petitionMsg.channel, roleName, mentionedMembers)
@@ -46,7 +51,7 @@ function newRoleForUsers (message, args) {
     })
 }
 
-function sendPetitionMessage (channel, roleName, requestor, users) {
+function sendPetitionMessage(channel, roleName, requestor, users) {
   const usersLine = users.map(member => {
     return `<@${member.id}>`
   }).join(' ')
@@ -56,12 +61,12 @@ function sendPetitionMessage (channel, roleName, requestor, users) {
     '**New Role Petition**:\n' +
     `<@${requestor.id}> would like to create a new *${anAdjective}* role ${roleName} for ${usersLine}\n` +
     'Members may show support however they like.\n' +
-    'A role admin please approve by reacting with a 👍 to approve this petition.\n',
+    'A role admin please react with a 👍 or 👎 to **approve** or **disapprove** this petition.\n',
     { allowedMentions: { parse: ['users'] } }
   )
 }
 
-function approvedRoleCreation (aGuild, channel, roleName, users) {
+function approvedRoleCreation(aGuild, channel, roleName, users) {
   let roleId = ''
   createNewRole(aGuild, roleName)
     .then((role) => {
@@ -82,7 +87,7 @@ function approvedRoleCreation (aGuild, channel, roleName, users) {
     })
 }
 
-function getUserFromArg (users, arg) {
+function getUserFromArg(users, arg) {
   if (!arg) return
 
   if (arg.startsWith('<@') && arg.endsWith('>')) {
@@ -96,7 +101,7 @@ function getUserFromArg (users, arg) {
   }
 }
 
-function createNewRole (aGuild, name) {
+function createNewRole(aGuild, name) {
   return aGuild.roles
     .create({
       data: {
@@ -107,13 +112,13 @@ function createNewRole (aGuild, name) {
     })
 }
 
-function applyRole (role, members) {
+function applyRole(role, members) {
   return Promise.all(
     members.each(member => member.roles.add(role.id))
   )
 }
 
-function sendSuccessMessage (channel, roleId, membersWithRole) {
+function sendSuccessMessage(channel, roleId, membersWithRole) {
   const usersLine = membersWithRole.map(member => {
     return `<@${member[1].id}>`
   }).join(' ')
@@ -126,11 +131,11 @@ function sendSuccessMessage (channel, roleId, membersWithRole) {
   )
 }
 
-function sendErrorMessage (channel, error) {
+function sendErrorMessage(channel, error) {
   return channel.send(`There was a problem creating a new role: ${error}`)
 }
 
-function sendUnapprovedMessage (channel, roleName) {
+function sendUnapprovedMessage(channel, roleName) {
   const anExclaimation = randomFrom(failExclaimations)
   return channel.send(
     '**Petition FAILED!**\n' +
@@ -139,6 +144,6 @@ function sendUnapprovedMessage (channel, roleName) {
     { allowedMentions: { parse: ['roles', 'users'] } })
 }
 
-function randomFrom (anArray) {
+function randomFrom(anArray) {
   return anArray[Math.floor(Math.random() * anArray.length)]
 }
