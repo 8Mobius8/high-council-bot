@@ -1,6 +1,7 @@
 {
   "name": "high-council-bot",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "versionName": "bit",
   "description": "Some discord friends said I needed to automate role assignment. So did.",
   "main": "index.js",
   "scripts": {
@@ -22,10 +23,27 @@
   },
   "homepage": "https://github.com/8Mobius8/high-council-bot#readme",
   "dependencies": {
-    "discord.js": "^12.3.1",
-    "eslint": "^7.9.0"
+    "discord.js": "^12.3.1"
   },
   "engines": {
     "node": "14.x"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^5.0.1",
+    "semantic-release": "^17.1.2",
+    "standard": "^14.3.4"
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogFile": "CHANGELOG.md"
+        }
+      ],
+      "@semantic-release/github"
+    ]
   }
 }

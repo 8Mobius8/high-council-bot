@@ -13,12 +13,12 @@
     "craven",
     "gustatory"
   ],
-  "pass_exclaimations": [
+  "passExclaimations": [
     "HUUZZZAH!",
     "Olé!",
     "Gee Wilkers Batman!"
   ],
-  "fail_exclaimations": [
+  "failExclaimations": [
     "RU-Roh Raggy!",
     "Zoinks!",
     "Golly",
@@ -30,5 +30,10 @@
     "Salutations!",
     "Greetings Earthling!",
     "Come and stay awhile!"
+  ],
+  "pejoratives": [
+    "Dingus!",
+    "Pssh, dummy.",
+    "You're a dingle butt. Whatever that means"
   ]
 }
