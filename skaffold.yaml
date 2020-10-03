@@ -17,3 +17,15 @@ profiles:
           docker:
             buildArgs:
               ENV: production
+  - name: develop
+    deploy:
+      kustomize:
+        paths:
+          - k8s/overlays/develop
+    build:
+      artifacts:
+        - image: 8mobius8/high-council-bot
+          sync: {}
+          docker:
+            buildArgs:
+              ENV: develop
