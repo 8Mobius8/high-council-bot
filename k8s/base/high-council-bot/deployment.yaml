@@ -17,12 +17,12 @@ spec:
           image: 8mobius8/high-council-bot
           ports: []
           resources:
-            requests:
-              cpu: 20m
-              memory: 100Mi
             limits:
               cpu: 20m
               memory: 100Mi
+            requests:
+              cpu: 5m
+              memory: 50Mi
           command: ["npm", "run", "prod"]
           env:
             - name: "BOT_CONFIG_PATH"
