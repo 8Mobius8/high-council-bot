@@ -32,6 +32,7 @@
   "devDependencies": {
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
+    "cz-conventional-changelog": "^3.3.0",
     "nodemon": "^2.0.4",
     "semantic-release": "^17.1.2",
     "standard": "^14.3.4"
@@ -56,5 +57,10 @@
       ],
       "@semantic-release/github"
     ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

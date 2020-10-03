@@ -9,7 +9,7 @@ module.exports = {
   aliases: ['nr', 'grovel-4-role', 'beg-4-role'],
   usage: '<role-name> <user-mentions>',
   args: true,
-  cooldown: 90000,
+  cooldown: 30,
   execute: newRoleForUsers
 }
 

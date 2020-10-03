@@ -10,6 +10,17 @@
         "language": "nodejs",
         "languageOptions": true
       }
+    ],
+    "develop": [
+      {
+        "name": "high-council-bot",
+        "uri": false,
+        "image": "8mobius8/high-council-bot",
+        "entrypoint": "npm run prod",
+        "ports": [],
+        "language": "nodejs",
+        "languageOptions": true
+      }
     ]
   }
 }
