@@ -2,6 +2,7 @@
   "name": "high-council-bot",
   "version": "1.0.0",
   "versionName": "bit",
+  "private": true,
   "description": "Some discord friends said I needed to automate role assignment. So did.",
   "main": "index.js",
   "scripts": {
@@ -32,6 +33,7 @@
   "devDependencies": {
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
+    "@semantic-release/npm": "^7.0.6",
     "cz-conventional-changelog": "^3.3.0",
     "nodemon": "^2.0.4",
     "semantic-release": "^17.1.2",
@@ -48,10 +50,17 @@
         }
       ],
       [
+        "@semantic-release/npm",
+        {
+          "npmPublish": false
+        }
+      ],
+      [
         "@semantic-release/git",
         {
           "assets": [
-            "CHANGELOG.md"
+            "CHANGELOG.md",
+            "package.json"
           ]
         }
       ],
