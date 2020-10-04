@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/8Mobius8/high-council-bot/compare/v1.2.1...v1.2.2) (2020-10-04)
+
+
+### Bug Fixes
+
+* **version:** version uses updated package.json version ([c9d3e7d](https://github.com/8Mobius8/high-council-bot/commit/c9d3e7d9c832acfdda95c8642e6d5ae9096fce9d))
+
 ## [1.2.1](https://github.com/8Mobius8/high-council-bot/compare/v1.2.0...v1.2.1) (2020-10-03)
 
 
