@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/8Mobius8/high-council-bot/compare/v1.2.2...v1.3.0) (2020-10-04)
+
+
+### Features
+
+* **version:** auto update versiondb for version cmd ([2fc91a2](https://github.com/8Mobius8/high-council-bot/commit/2fc91a2cceed855aa8cc9e1a1f9b308931827a63))
+
 ## [1.2.2](https://github.com/8Mobius8/high-council-bot/compare/v1.2.1...v1.2.2) (2020-10-04)
 
 
