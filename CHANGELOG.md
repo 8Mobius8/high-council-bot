@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/8Mobius8/high-council-bot/compare/v1.3.0...v1.3.1) (2020-10-05)
+
+
+### Bug Fixes
+
+* **version:** print argument when running script ([50f15f2](https://github.com/8Mobius8/high-council-bot/commit/50f15f22552085004d6620d9432f5b816c1bba00))
+
 # [1.3.0](https://github.com/8Mobius8/high-council-bot/compare/v1.2.2...v1.3.0) (2020-10-04)
 
 
