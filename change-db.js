@@ -3,6 +3,8 @@ console.log('run change-db.js')
 const args = process.argv.slice(2).join('')
 
 try {
+  console.log(args)
+  
   const versiondb = JSON.parse(args)
 
   const data = JSON.stringify(versiondb);
