@@ -1,10 +1,10 @@
-console.log('run change-db.js')
+console.log('running change-db.js')
 
-const args = process.argv.slice(2).join('')
+const args = process.argv.slice(2)[0]
 
 try {
   console.log(args)
-  
+
   const versiondb = JSON.parse(args)
 
   const data = JSON.stringify(versiondb);
@@ -18,4 +18,5 @@ try {
 
 } catch(err) {
   console.error(err)
+  process.exit(1)
 }
