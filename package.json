@@ -44,16 +44,11 @@
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
       [
         "@semantic-release/exec",
         {
-          "prepareCmd": "node ./change-db.js ${releases}"
-        }
-      ],
-      [
-        "@semantic-release/changelog",
-        {
-          "changelogFile": "CHANGELOG.md"
+          "prepareCmd": "node ./update-db.js"
         }
       ],
       [
@@ -67,7 +62,8 @@
         {
           "assets": [
             "CHANGELOG.md",
-            "package.json"
+            "package.json",
+            "commands/versions.json"
           ]
         }
       ],
