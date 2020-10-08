@@ -1,6 +1,6 @@
 {
   "name": "high-council-bot",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "versionName": "bit",
   "private": true,
   "description": "Some discord friends said I needed to automate role assignment. So did.",

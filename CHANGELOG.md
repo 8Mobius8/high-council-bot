@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/8Mobius8/high-council-bot/compare/v1.3.2...v1.4.0) (2020-10-08)
+
+
+### Features
+
+* **version:** version all print all release notes ([9eb65b9](https://github.com/8Mobius8/high-council-bot/commit/9eb65b94e812dc13e0825d1c492e1bb03021993a))
+
 ## [1.3.2](https://github.com/8Mobius8/high-council-bot/compare/v1.3.1...v1.3.2) (2020-10-08)
 
 
