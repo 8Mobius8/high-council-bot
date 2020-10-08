@@ -1,3 +1,11 @@
+## [1.3.2](https://github.com/8Mobius8/high-council-bot/compare/v1.3.1...v1.3.2) (2020-10-08)
+
+
+### Bug Fixes
+
+* **version:** fix change-db.js to write releases correctly ([baa12b7](https://github.com/8Mobius8/high-council-bot/commit/baa12b72980652ccdcec9cb0b59d347b496a3d6a))
+* **version:** version command prints version notes nicely ([5e92911](https://github.com/8Mobius8/high-council-bot/commit/5e92911429819378ad69eee47ffd0ab9d3212fed))
+
 ## [1.3.1](https://github.com/8Mobius8/high-council-bot/compare/v1.3.0...v1.3.1) (2020-10-05)
 
 
