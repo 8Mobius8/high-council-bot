@@ -1,4 +1,4 @@
-const { versionName, version } = require('../package.json')
+const { version } = require('../package.json')
 const { releases } = require('./versions.json')
 const { MessageEmbed } = require('discord.js')
 
@@ -8,15 +8,15 @@ module.exports = {
   cooldown: 5,
   execute (message, args) {
     const theRelease = releases.find(release => release.version === version)
+    const theSections = theRelease.sections.map((i, s) => {
+      return { name: s.name, value: s.notes }
+    })
 
     const avatarEmbed = new MessageEmbed()
-      .setTitle(`${versionName} - ${version}`)
+      .setTitle(`${version}`)
       .setThumbnail(message.client.user.displayAvatarURL({ dynamic: true, size: 128 }))
       .setURL(theRelease.url)
-      .addField(
-        'Release Notes',
-        theRelease.notes
-      )
+      .addFields(theSections)
     message.channel.send(avatarEmbed)
   }
 }
