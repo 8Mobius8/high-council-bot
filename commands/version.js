@@ -2,7 +2,7 @@ const { version } = require('../package.json')
 const botReleases = require('./versions.json')
 const { MessageEmbed } = require('discord.js')
 
-const options = ['all']
+const options = ['all', 'features', 'feature']
 
 module.exports = {
   name: 'version',
@@ -12,22 +12,37 @@ module.exports = {
     const versionMessage = new MessageEmbed()
       .setThumbnail(message.client.user.displayAvatarURL({ dynamic: true, size: 128 }))
 
-    const unsupportedArgs = args.filter(a => options.indexOf(a) === -1)
+    const unsupportedArgs = args.filter(unsupportedOption)
     if (unsupportedArgs.length > 0) {
       message.channel.send(`Invalid version options were given:\n${unsupportedArgs}\n\nTry using these: \`${options}\``)
       return
     }
 
-    const inputOptions = args.filter(a => options.indexOf(a) > -1)
+    const inputOptions = args.filter(supportedOption)
     buildVersions(versionMessage, filterReleases(inputOptions, botReleases))
 
     message.channel.send(versionMessage)
   }
 }
 
-function filterReleases (options, releases) {
-  if (options.indexOf('all') > -1) return releases
+function supportedOption (arg) { return options.indexOf(arg) !== -1 }
+function unsupportedOption (arg) { return options.indexOf(arg) === -1 }
+function oneContainedIn(opts, inputs) { return inputs.length > 0 && opts.some(opt => inputs.includes(opt)) }
+
+function filterReleases (argOptions, releases) {
+  if (oneContainedIn(['all'], argOptions)) return releases
+  if (oneContainedIn(['feature', 'features'], argOptions)) return filterFeatures(releases)
   else return releases.slice(0, 1)
+}
+
+function filterFeatures (release) {
+  return release.reduce((featureReleases, release) => {
+    if (release.sections.some(section => section.name.includes('Features'))) {
+      release.sections = release.sections.filter(section => section.name.includes('Features'))
+      featureReleases.push(release)
+    }
+    return featureReleases
+  }, [])
 }
 
 function buildVersions (embeded, releases) {
