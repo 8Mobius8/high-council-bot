@@ -1,4 +1,4 @@
-const { version } = require('../package.json')
+const { version: CURRENT_VERSION } = require('../package.json')
 const botReleases = require('./versions.json')
 const { MessageEmbed } = require('discord.js')
 
@@ -9,16 +9,15 @@ module.exports = {
   description: 'Prints version info for the bot.',
   cooldown: 5,
   execute (message, args) {
-    const versionMessage = new MessageEmbed()
-      .setThumbnail(message.client.user.displayAvatarURL({ dynamic: true, size: 128 }))
-
     const unsupportedArgs = args.filter(unsupportedOption)
     if (unsupportedArgs.length > 0) {
       message.channel.send(`Invalid version options were given:\n${unsupportedArgs}\n\nTry using these: \`${options}\``)
       return
     }
-
     const inputOptions = args.filter(supportedOption)
+
+    const versionMessage = new MessageEmbed()
+      .setThumbnail(message.client.user.displayAvatarURL({ dynamic: true, size: 128 }))
     buildVersions(versionMessage, filterReleases(inputOptions, botReleases))
 
     message.channel.send(versionMessage)
@@ -27,40 +26,37 @@ module.exports = {
 
 function supportedOption (arg) { return options.indexOf(arg) !== -1 }
 function unsupportedOption (arg) { return options.indexOf(arg) === -1 }
-function oneContainedIn(opts, inputs) { return inputs.length > 0 && opts.some(opt => inputs.includes(opt)) }
+function oneContainedIn (array, optsToMatch) {
+  return array.length > 0 &&
+    optsToMatch.some(opt => array.includes(opt))
+}
 
 function filterReleases (argOptions, releases) {
-  let filter = (releases) => releases.slice(0, 1)
-  if (oneContainedIn(['all'], argOptions)) return releases
-  if (oneContainedIn(['feature', 'features'], argOptions)) filter = filterFeatures
-  if (oneContainedIn(['bug', 'bugs'], argOptions)) filter = filterBugs
+  let filter = (releases) => releases.filter(r => r.version === CURRENT_VERSION)
 
-  if (oneContainedIn(['new'], argOptions)) filter = filterNew(filter, releases)
+  if (oneContainedIn(argOptions, ['all'])) return releases
+  if (oneContainedIn(argOptions, ['feature', 'features'])) filter = filterFeatures
+  if (oneContainedIn(argOptions, ['bug', 'bugs'])) filter = filterBugs
+
+  if (oneContainedIn(argOptions, ['new'])) filter = filterLatest(filter, releases)
   return filter(releases)
 }
 
-function filterFeatures (release) {
-  return release.reduce((featureReleases, release) => {
-    if (release.sections.some(section => section.name.includes('Features'))) {
-      release.sections = release.sections.filter(section => section.name.includes('Features'))
-      featureReleases.push(release)
+function filterFeatures (releases) { return filterSectionName('Feature', releases) }
+function filterBugs (releases) { return filterSectionName('Bug', releases) }
+
+function filterSectionName (fName, inputReleases) {
+  return inputReleases.reduce((releases, release) => {
+    if (release.sections.some(section => section.name.includes(fName))) {
+      release.sections = release.sections.filter(section => section.name.includes(fName))
+      releases.push(release)
     }
-    return featureReleases
+    return releases
   }, [])
 }
 
-function filterBugs (release) {
-  return release.reduce((bugReleases, release) => {
-    if (release.sections.some(section => section.name.includes('Bug'))) {
-      release.sections = release.sections.filter(section => section.name.includes('Bug'))
-      bugReleases.push(release)
-    }
-    return bugReleases
-  }, [])
-}
-
-function filterNew(filter, releases) {
-  return releases => filter(releases).slice(0,1)
+function filterLatest (filter, releases) {
+  return releases => filter(releases).slice(0, 1)
 }
 
 function buildVersions (embeded, releases) {
