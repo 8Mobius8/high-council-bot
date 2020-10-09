@@ -6,7 +6,9 @@ const options = ['all', 'features', 'feature', 'bugs', 'bug', 'new']
 
 module.exports = {
   name: 'version',
-  description: 'Prints version info for the bot.',
+  description: 'Prints version info for the bot.\n' +
+    'You can use the following options to filter and list releases by:' +
+    `\n\`${options}\``,
   cooldown: 5,
   execute (message, args) {
     const unsupportedArgs = args.filter(unsupportedOption)
