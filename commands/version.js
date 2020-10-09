@@ -2,7 +2,7 @@ const { version } = require('../package.json')
 const botReleases = require('./versions.json')
 const { MessageEmbed } = require('discord.js')
 
-const options = ['all', 'features', 'feature']
+const options = ['all', 'features', 'feature', 'bugs', 'bug', 'new']
 
 module.exports = {
   name: 'version',
@@ -30,9 +30,13 @@ function unsupportedOption (arg) { return options.indexOf(arg) === -1 }
 function oneContainedIn(opts, inputs) { return inputs.length > 0 && opts.some(opt => inputs.includes(opt)) }
 
 function filterReleases (argOptions, releases) {
+  let filter = (releases) => releases.slice(0, 1)
   if (oneContainedIn(['all'], argOptions)) return releases
-  if (oneContainedIn(['feature', 'features'], argOptions)) return filterFeatures(releases)
-  else return releases.slice(0, 1)
+  if (oneContainedIn(['feature', 'features'], argOptions)) filter = filterFeatures
+  if (oneContainedIn(['bug', 'bugs'], argOptions)) filter = filterBugs
+
+  if (oneContainedIn(['new'], argOptions)) filter = filterNew(filter, releases)
+  return filter(releases)
 }
 
 function filterFeatures (release) {
@@ -43,6 +47,20 @@ function filterFeatures (release) {
     }
     return featureReleases
   }, [])
+}
+
+function filterBugs (release) {
+  return release.reduce((bugReleases, release) => {
+    if (release.sections.some(section => section.name.includes('Bug'))) {
+      release.sections = release.sections.filter(section => section.name.includes('Bug'))
+      bugReleases.push(release)
+    }
+    return bugReleases
+  }, [])
+}
+
+function filterNew(filter, releases) {
+  return releases => filter(releases).slice(0,1)
 }
 
 function buildVersions (embeded, releases) {
@@ -65,7 +83,7 @@ function buildVersions (embeded, releases) {
 }
 
 function buildVersion (embeded, release) {
-  embeded.title = `${version}`
+  embeded.title = `${release.version}`
   embeded.url = release.url
   for (const section of release.sections) {
     embeded.fields.push({ name: section.name, value: section.notes })
