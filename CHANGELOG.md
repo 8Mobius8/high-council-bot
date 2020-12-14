@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/8Mobius8/high-council-bot/compare/v1.5.0...v1.5.1) (2020-12-14)
+
+
+### Bug Fixes
+
+* **package.json:** updating depedancies for security patches ([9226d4e](https://github.com/8Mobius8/high-council-bot/commit/9226d4e1b163497d968c8cf43878e9f88bae8e77))
+
 # [1.5.0](https://github.com/8Mobius8/high-council-bot/compare/v1.4.0...v1.5.0) (2020-10-09)
 
 
