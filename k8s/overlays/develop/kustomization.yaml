@@ -1,8 +1,0 @@
-resources: []
-bases:
-  - ../../base/high-council-bot
-nameSuffix: -dev
-configMapGenerator:
-  - name: bot-config
-    files:
-      - ./secrets/config.json

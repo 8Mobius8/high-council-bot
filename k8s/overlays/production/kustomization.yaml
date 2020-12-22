@@ -1,7 +1,0 @@
-resources: []
-bases:
-  - ../../base/high-council-bot
-configMapGenerator:
-  - name: bot-config
-    files:
-      - ./secrets/config.json
