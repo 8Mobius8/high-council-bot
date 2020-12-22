@@ -9,7 +9,7 @@
     "start": "node --optimize_for_size --max_old_space_size=460 --gc_interval=100 --unhandled-rejections=warn-with-error-code index.js",
     "prod": "node --optimize_for_size --max_old_space_size=460 --gc_interval=100 index.js",
     "dev": "nodemon .",
-    "lint": "standard --verbose"
+    "lint": "standard --verbose --fix"
   },
   "repository": {
     "type": "git",
